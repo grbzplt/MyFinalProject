@@ -3,6 +3,7 @@ using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace DataAccess.Concrete.InMemory
@@ -12,7 +13,7 @@ namespace DataAccess.Concrete.InMemory
         List<Product> _products;
         public InMemoryProductDal()
         {
-            //Sql Server, Oracle, MongoDb geliyormuş gibi simule ediyoruz.
+            //Sql Server, Oracle, MongoDb dan geliyormuş gibi simule ediyoruz.
             _products = new List<Product> {
                 new Product{ProductId=1,CategoryId=1,ProductName="Bardak",UnitPrice=15,UnitsInStock=15},
                 new Product{ProductId=2,CategoryId=1,ProductName="Kamera",UnitPrice=500,UnitsInStock=3},
@@ -24,18 +25,20 @@ namespace DataAccess.Concrete.InMemory
 
         public void Add(Product product)
         {
-            _products.Add(product);
-            
+            _products.Add(product);           
         }
 
+        ////(1)
         //public void Delete(Product product)
-        //{
-        //    //(1) 
-        //    _products.Remove(product); //Bu şekilde product silinmez.Çünkü referans lar ile çalışıyoruz.
+        //{   
+        //    _products.Remove(product); //Bu şekilde product silinmez.Çünkü referans lar ile çalışıyoruz.          
+        //}
 
-        //    //Ürün silerken onun primary key ini kullanırız.
+        //Ürün silerken onun primary key ini kullanırız.
 
-        //    //(2) LINQ kullanmadan klasik yöntemle:
+        ////(2) LINQ kullanmadan klasik yöntemle:
+        //public void Delete(Product product)
+        //{ 
         //    //Product productToDelete=new Product() --> HATALI kullanım;
         //    Product productToDelete=null; //null --> referansı yok.
         //    foreach (var p in _products)
@@ -48,20 +51,18 @@ namespace DataAccess.Concrete.InMemory
         //   _products.Remove(productToDelete);          
         //}
 
+        //(3) LINQ kullanarak:
         public void Delete(Product product)
-        {
-            //(3) LINQ kullanarak:
-
+        {          
             Product productToDelete;
 
             //SingleOrDefault --> tek bir eleman bulmaya yarar. (FirstOrDefault  da kullanılabilir.)
-            //SingleOrDefault(p=>p.ProductId==product.ProductId)  kodu yukarıdaki foreach in yaptığını yapıyor.
+            //SingleOrDefault(p=>p.ProductId==product.ProductId)  --> yukarıdaki foreach in yaptığını yapıyor.
 
             productToDelete = _products.SingleOrDefault(p => p.ProductId == product.ProductId);
 
             _products.Remove(productToDelete);
         }
-
         public void Update(Product product)
         {
             //Gönderdiğim ürün Id sine sahip olan listedeki ürünü bul
@@ -71,16 +72,22 @@ namespace DataAccess.Concrete.InMemory
             productToUpdate.CategoryId = product.CategoryId;
             productToUpdate.UnitPrice = product.UnitPrice;
             productToUpdate.UnitsInStock = product.UnitsInStock;
-
         }
         public List<Product> GetAll()
         {
             return _products;
         }
-
         public List<Product> GetAllByCategory(int categoryId)
         {
             return _products.Where(p => p.CategoryId == categoryId).ToList();
+        }
+        public List<Product> GetAll(Expression<Func<Product, bool>> filter = null)
+        {
+            throw new NotImplementedException();
+        }
+        public Product Get(Expression<Func<Product, bool>> filter)
+        {
+            throw new NotImplementedException();
         }
     }
 }
