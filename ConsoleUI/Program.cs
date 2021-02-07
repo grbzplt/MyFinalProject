@@ -5,17 +5,16 @@ using System;
 
 namespace ConsoleUI
 {
-    //SOLID
-    //Open Closed Principle
     class Program
     {
         static void Main(string[] args)
         {
-            //Data Transformation Object
-            ProductTest();
-            //IoC 
+
+            //ProductTest();
+            
             //CategoryTest();
         }
+
 
         private static void CategoryTest()
         {
