@@ -29,6 +29,14 @@ namespace Business.Concrete
             //business codes    --> kişi kredi için uygun mu? uygunsa kredi verilecek
             //validation        --> kişinin ismi 2 harfli olamaz gibi kodlar
 
+            //var context = new ValidationContext<Product>(product);
+            //ProductValidator productValidator = new ProductValidator();
+            //var result = productValidator.Validate(context);
+            //if (!result.IsValid)
+            //{
+            //    throw new ValidationException(result.Errors);
+            //}
+
             //ValidationTool.Validate(new ProductValidator(),product);    //iş kuralı değil
 
             _productDal.Add(product);

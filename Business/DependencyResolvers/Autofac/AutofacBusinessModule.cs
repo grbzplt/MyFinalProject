@@ -28,11 +28,5 @@ namespace Business.DependencyResolvers.Autofac
                     }).SingleInstance();
         }
 
-
-
-
-
-
-
     }
 }
