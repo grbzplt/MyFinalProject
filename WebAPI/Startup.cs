@@ -31,6 +31,9 @@ namespace WebAPI
         {
             services.AddControllers();
 
+
+
+
             //services.AddSingleton<IProductService,ProductManager>();
             //services.AddSingleton<IProductDal, EfProductDal>();
         }
@@ -42,6 +45,8 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+
 
             app.UseHttpsRedirection();
 

@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspect.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
@@ -27,49 +28,60 @@ namespace Business.Concrete
             _categoryService = categoryService;
         }
 
+        [SecuredOperation("product.add,admin")]
 
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
-            //business codes:
-
-            //// (1)Bir kategoride en fazla 10 ürün olabilir
-            //var result = _productDal.GetAll(p => p.CategoryId == product.CategoryId).Count;
-            //if (result>=10)  // ilerde 15 olursa Update unutulursa çöker
-            //{
-            //    return new ErrorResult(Messages.ProductCountOfCategoryError);
-            //}
-            //// (2) Aynı isimde ürün eklenemez
-
-            //// (3) Eğer mevcut kategori sayısı 15' i geçtiyse sisteme yeni ürün eklenemez.
-
-
-
-
-            // (1) ve (2) nin daha da iyileştirilmiş hali
-            IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName), CheckIfProductCountOfCategoryCorrect(product.CategoryId),CheckIfCategoryLimitExceded());
+            // (3) eklenmiş hali
+            IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName), CheckIfProductCountOfCategoryCorrect(product.CategoryId), CheckIfCategoryLimitExceded());
             if (result != null)
             {
                 return result;
             }
-
             _productDal.Add(product);
-
             return new SuccessResult(Messages.ProductAdded);
 
 
-            ////(1) iyileştirilmiş
+            // Business codes:
+            // ********************************* Sorular ****************************************
+            //// (1) Bir kategoride en fazla 10 ürün olabilir
+
+            //// (2) Aynı isimde ürün eklenemez
+
+            //// (3) Eğer mevcut kategori sayısı 15' i geçtiyse sisteme yeni ürün eklenemez.
+
+            // ********************************* Cevaplar ****************************************
+
+            //// (1) Bir kategoride en fazla 10 ürün olabilir
+            //var result = _productDal.GetAll(p => p.CategoryId == product.CategoryId).Count;
+            //if (result>=10)  //ilerde 15 olursa Update de değiştirme unutulursa açık oluşur.
+            //{
+            //    return new ErrorResult(Messages.ProductCountOfCategoryError);
+            //}
+
+            //// (1) Bir kategoride en fazla 10 ürün olabilir - iyileştirilmiş kod
             //if (CheckIfProductCountOfCategoryCorrect(product.CategoryId).Success)
             //{
-            //    ////(2) Aynı isimde ürün eklenemez
+            //    //// (2) Aynı isimde ürün eklenemez - sonradan eklendi
             //    if (CheckIfProductNameExists(product.ProductName).Success)
             //    {
             //        _productDal.Add(product);
-
             //        return new SuccessResult(Messages.ProductAdded);
             //    }              
             //}
             //return new ErrorResult();
+
+            //// (1) ve (2) nin iyileştirilmiş hali
+            //// Core.Utilities.Business --> BusinessRules.cs oluşturulur.
+            //IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName), CheckIfProductCountOfCategoryCorrect(product.CategoryId));
+            //if (result != null)
+            //{
+            //    return result;
+            //}
+            //_productDal.Add(product);
+            //return new SuccessResult(Messages.ProductAdded);
+
 
             //*********************************************************************************
             ////validation :  (ürünün ismi 2 harfli olamaz gibi kodlar)
@@ -92,15 +104,13 @@ namespace Business.Concrete
 
         //[ValidationAspect(typeof(ProductValidator))]
         public IResult Update(Product product)
-        {
-            /*
-            // (1) Bir kategoride en fazla 10 ürün olabilir
-            var result = _productDal.GetAll(p => p.CategoryId == product.CategoryId).Count;
-            if (result >= 10)
-            {
-                return new ErrorResult(Messages.ProductCountOfCategoryError);
-            }
-            */
+        {          
+            //// (1) Bir kategoride en fazla 10 ürün olabilir
+            //var result = _productDal.GetAll(p => p.CategoryId == product.CategoryId).Count;
+            //if (result >= 10)
+            //{
+            //    return new ErrorResult(Messages.ProductCountOfCategoryError);
+            //}          
 
             _productDal.Update(product);
 
@@ -141,7 +151,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(p => p.UnitPrice >= min && p.UnitPrice <= max));
         }
 
-        // (1) iyileştirilmiş
+        // (1) iyileştirilmiş kod
         private IResult CheckIfProductCountOfCategoryCorrect(int categoryId)
         {
             //Select count(*) from product where categoryId=1
