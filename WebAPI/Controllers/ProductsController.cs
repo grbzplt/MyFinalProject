@@ -15,7 +15,11 @@ namespace WebAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
+        //Loosely coupled
+        //naming convention
+        //IoC Container -- Inversion of Control
         IProductService _productService;
+
         public ProductsController(IProductService productService)
         {
             _productService = productService;
@@ -24,15 +28,15 @@ namespace WebAPI.Controllers
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
-            var result = _productService.GetAll();
+            //Swagger
+            //Dependency chain --
+            var result =  _productService.GetAll();
             if (result.Success)
             {
                 return Ok(result);
             }
-            else
-            {
-                return BadRequest(result);
-            }
+            return BadRequest(result);
+
         }
 
         [HttpGet("getbyid")]
@@ -43,28 +47,24 @@ namespace WebAPI.Controllers
             {
                 return Ok(result);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest(result);
         }
-
-
 
         [HttpPost("add")]
         public IActionResult Add(Product product)
         {
             var result = _productService.Add(product);
-
             if (result.Success)
             {
                 return Ok(result);
             }
-            else
-            {
-                return BadRequest(result);
-            }
+            return BadRequest(result);
         }
+
 
     }
 }
+
+
+//22.05 DERSTEYİZ

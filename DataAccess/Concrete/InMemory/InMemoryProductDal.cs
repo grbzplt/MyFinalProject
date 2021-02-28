@@ -32,7 +32,7 @@ namespace DataAccess.Concrete.InMemory
         {
             //LINQ - Language Integrated Query
             //Lambda
-            Product productToDelete = _products.SingleOrDefault(p => p.ProductId == product.ProductId);
+            Product productToDelete =  _products.SingleOrDefault(p=>p.ProductId ==product.ProductId);
 
             _products.Remove(productToDelete);
         }
@@ -54,7 +54,7 @@ namespace DataAccess.Concrete.InMemory
 
         public List<Product> GetAllByCategory(int categoryId)
         {
-            return _products.Where(p => p.CategoryId == categoryId).ToList();
+           return _products.Where(p => p.CategoryId == categoryId).ToList();
         }
 
         public List<Product> GetAll(Expression<Func<Product, bool>> filter = null)
