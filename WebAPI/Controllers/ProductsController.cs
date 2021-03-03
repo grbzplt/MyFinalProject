@@ -30,6 +30,7 @@ namespace WebAPI.Controllers
         {
             //Swagger
             //Dependency chain --
+
             var result =  _productService.GetAll();
             if (result.Success)
             {
@@ -65,6 +66,3 @@ namespace WebAPI.Controllers
 
     }
 }
-
-
-//22.05 DERSTEYİZ
